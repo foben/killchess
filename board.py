@@ -56,6 +56,9 @@ class Board():
     def get_tile(self, (x, y)):
         return self.board[x][y]
 
+    def get_pos(self, (x, y)):
+        return self.get_tile((x, y)).rect.center
+
     def get_entities_on_tile(self, (x, y)):
         return self.entity_map[x][y]
 

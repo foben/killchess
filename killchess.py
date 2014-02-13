@@ -18,18 +18,30 @@ def main():
 
     while 1:
         clock.tick(60)
-        clicked = False
+        clicked_left = False
+        clicked_right = False
         for event in pygame.event.get():
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                return 
             if event.type == MOUSEBUTTONUP:
-                clicked = True
+                button = event.button
+                if button == 1:
+                    clicked_left = True
+                if button == 3:
+                    clicked_right = True
 
         mpos = pygame.mouse.get_pos()
-        controller.process(mpos, clicked)
+        controller.process(mpos, clicked_left, clicked_right)
 
         #Displaying
         screen.fill(black)
+        controller.update()
         controller.trigger_draw()
+
+        myfont = pygame.font.SysFont("monospace", 15)
+        label = myfont.render(str(mpos), 1, (255,255,0))
+        screen.blit(label, (5, 5))
+
+
         pygame.display.flip()
 main()
