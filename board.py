@@ -45,6 +45,11 @@ class Board():
         entity.rect.center = self.board[x][y].rect.center
         self.entity_map[x][y].add(entity)
 
+    def update_entities(self):
+        for  x in range(len(self.entity_map)):
+            for y in range(len(self.entity_map[x])):
+                self.entity_map[x][y].update()
+
     def get_tile_from_position(self, (xa, ya)):
         r = Rect(xa, ya, 1, 1)
         for tile in self.all_tiles_group:

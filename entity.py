@@ -13,6 +13,7 @@ class Entity(pygame.sprite.Sprite):
         self.movelist = [ (-1, -1), (-1, 0), (-1, 1),\
                           (0, -1), (0, 1),\
                           (1, -1), (1, 0), (1, 1)  ]
+        self.health = 2
 
     def get_name(self):
         return "Dude"
@@ -20,6 +21,22 @@ class Entity(pygame.sprite.Sprite):
     def get_movements(self):
         return self.movelist
 
+    def get_health(self):
+        return self.health
+
+    def get_damage(self):
+        return 1
+
+    def take_damage(self, amount):
+        print "taking %s damage" % amount
+        self.health -= amount
+
+    def update(self):
+        if self.health <= 0:
+            self.die()
+
+    def die(self):
+        self.kill()
 
 class Knight(Entity):
     def __init__(self):
@@ -79,11 +96,10 @@ class Explosion(SheetAnimation):
         SheetAnimation.__init__(self, 40, 40, 7, 5, 'images/sheet_explosion.png', 1)
         self.rect.center = position
 
-
 class Nade(SheetAnimation):
     def __init__(self, start_pos, end_pos):
-        SheetAnimation.__init__(self, 35, 35, 3, 5, 'images/sheet_nade.png')
-        self.max_ticks = 70.0
+        SheetAnimation.__init__(self, 35, 35, 3, 4, 'images/sheet_nade.png')
+        self.max_ticks = 150.0
         self.start_pos = start_pos
         self.end_pos = end_pos
         self.tick_count = 0
@@ -105,5 +121,7 @@ class Nade(SheetAnimation):
 
     def manipulate_frame(self, frame):
         scalef = 1 + (1 - (math.fabs(self.tick_count - (self.max_ticks/2))/(self.max_ticks/2)))*2
-        #print "%s  %s" %(scalef, self.cx)
-        return pygame.transform.rotozoom(frame, 0, scalef)
+        nwidth = int(self.rect.width * scalef)
+        nheight = int(self.rect.height * scalef)
+        return pygame.transform.scale(frame, (nwidth, nheight))
+
