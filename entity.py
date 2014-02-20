@@ -5,6 +5,7 @@ from random import randint
 from math import sqrt
 from pygame.locals import *
 from pygame.sprite import collide_rect
+from pygame import Surface
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, image='images/dude.png'):
@@ -99,7 +100,7 @@ class Explosion(SheetAnimation):
 class Nade(SheetAnimation):
     def __init__(self, start_pos, end_pos):
         SheetAnimation.__init__(self, 35, 35, 3, 4, 'images/sheet_nade.png')
-        self.max_ticks = 150.0
+        self.max_ticks = 75.0
         self.start_pos = start_pos
         self.end_pos = end_pos
         self.tick_count = 0
@@ -124,4 +125,40 @@ class Nade(SheetAnimation):
         nwidth = int(self.rect.width * scalef)
         nheight = int(self.rect.height * scalef)
         return pygame.transform.scale(frame, (nwidth, nheight))
+
+class Laser(pygame.sprite.Sprite):
+    def __init__(self, start_pos, end_pos):
+        pygame.sprite.Sprite.__init__(self)
+        #self.image, self.rect = futils.load_image('images/laserh.png')
+        self.laserimage, self.laserrect = futils.load_image('images/laserh.png')
+        self.width = max(math.fabs(end_pos[0] - start_pos[0]), 35)
+        self.height = max( math.fabs(end_pos[1] - start_pos[1]), 35)
+        self.image = Surface((self.width, self.height))
+        self.image.fill((255, 155, 255))
+        self.image.set_colorkey((255, 0, 255))
+        self.rect = pygame.Rect((0,0), (self.width, self.height))
+        if start_pos[1] == end_pos[1]:
+
+            self.rect.midleft = start_pos
+            self.rect.midright = end_pos
+            for x in range(int(self.width)):
+                self.image.blit(self.laserimage, (x,0))
+            print self.rect
+                
+        elif start_pos[0] == end_pos[0]:
+            self.kill()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
