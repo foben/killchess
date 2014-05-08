@@ -129,36 +129,36 @@ class Nade(SheetAnimation):
 class Laser(pygame.sprite.Sprite):
     def __init__(self, start_pos, end_pos):
         pygame.sprite.Sprite.__init__(self)
+        self.ticks = 0
         #self.image, self.rect = futils.load_image('images/laserh.png')
         self.laserimage, self.laserrect = futils.load_image('images/laserh.png')
         self.width = max(math.fabs(end_pos[0] - start_pos[0]), 35)
-        self.height = max( math.fabs(end_pos[1] - start_pos[1]), 35)
+        self.height = max( math.fabs(end_pos[1] - start_pos[1]), 15)
         self.image = Surface((self.width, self.height))
         self.image.fill((255, 155, 255))
-        self.image.set_colorkey((255, 0, 255))
         self.rect = pygame.Rect((0,0), (self.width, self.height))
         if start_pos[1] == end_pos[1]:
-
-            self.rect.midleft = start_pos
-            self.rect.midright = end_pos
+            if start_pos[0] < end_pos[0]:
+                self.rect.midleft = start_pos
+                self.rect.midright = end_pos
+            else:
+                self.rect.midleft = end_pos
+                self.rect.midright = start_pos
             for x in range(int(self.width)):
                 self.image.blit(self.laserimage, (x,0))
-            print self.rect
                 
         elif start_pos[0] == end_pos[0]:
-            self.kill()
+            if start_pos[1] < end_pos[1]:
+                self.rect.midtop = start_pos
+                self.rect.midbottom = end_pos
+            else:
+                self.rect.midtop = end_pos
+                self.rect.midbottom = start_pos
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    def update(self):
+        self.ticks += 1
+        transp = self.ticks * 15 
+        self.image.set_alpha(255 - transp)
+        if self.ticks >= 20: self.kill()
 

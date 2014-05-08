@@ -49,16 +49,18 @@ class UnitSelectedForActionState(State):
         print "Can't move here, already occupied!"
 
     def click_right_empty_tile(self, position):
-        if isinstance(self.entity, Rook):
-            print 'im rook'
-            laser = Laser(self.entity.rect.center, self.context.board.get_pos(position))
-            self.context.animation_group.add(laser)
-            return
         if position in self.movement_targets:
-            nade = Nade(self.entity.rect.center, self.context.board.get_pos(position))
-            self.context.animation_group.add(nade)
+            if isinstance(self.entity, Rook):
+                print 'im rook'
+                laser = Laser(self.entity.rect.center, self.context.board.get_pos(position))
+                self.context.animation_group.add(laser)
+            else:
+                nade = Nade(self.entity.rect.center, self.context.board.get_pos(position))
+                self.context.animation_group.add(nade)
     
     def click_right_occupied_tile(self, position, entities):
+        if isinstance(self.entity, Rook):
+            return
         if position in self.movement_targets:
             nade = Nade(self.entity.rect.center, self.context.board.get_pos(position))
             self.context.animation_group.add(nade)
